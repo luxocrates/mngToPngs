@@ -21,7 +21,7 @@ const pngHeader = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 const tagsToCopy = new Set(["IHDR", "IDAT", "IEND"]);
 
 /** Stream out the tagged chunks from the .MNG file*/
-async function* getChunks(fd) {
+function* getChunks(fd) {
   let offset = 0;
 
   // Skip past the .MNG magic header. Ideally we'd verify it.  
@@ -93,10 +93,11 @@ const [filename, fd, dirname] = getCliArgs();
 // consistent number of digits
 // 
 // Although it's tempting to use the nominal frame count in the file header,
-// MAME currently seems to be undercounting
+// MAME currently (v0.269) reports it as zero. So yes, we stream the whole
+// video through twice.
 
 let frames = 0;
-for await (const [tag] of getChunks(fd)) {
+for (const [tag] of getChunks(fd)) {
   if (tag === "IHDR") frames++;
   if (tag === "MEND") break;
 }
@@ -111,8 +112,8 @@ const [filestem] = basename(filename).split(".");
 /** Staged chunks for whichever frame is current */
 let chunksToOutput = [];
 
-for await (const [tag, payload] of getChunks(fd)) {
-  if (tagsToCopy.has(tag)) chunksToOutput.push(payload);
+for (const [tag, chunk] of getChunks(fd)) {
+  if (tagsToCopy.has(tag)) chunksToOutput.push(chunk);
 
   // End-of-image tag: close up the staged file
   if (tag === "IEND") {
