@@ -20,7 +20,7 @@ const pngHeader = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 /** Image tags that should be copied verbatim to the .PNG */
 const tagsToCopy = new Set(["IHDR", "IDAT", "IEND"]);
 
-/** Stream out the tagged chunks from the .MNG file*/
+/** Stream out the tagged chunks from the .MNG file */
 function* getChunks(fd) {
   let offset = 0;
 
@@ -119,6 +119,7 @@ for (const [tag, chunk] of getChunks(fd)) {
   if (tag === "IEND") {
     const filename = `${dirname}/${filestem}_${String(frame).padStart(numDigits, "0")}.png`;
     console.log("Writing", filename);
+    
     // TODO: catch errors
     writeFileSync(filename, Buffer.concat([pngHeader, ...chunksToOutput]));
 

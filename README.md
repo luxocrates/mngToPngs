@@ -10,9 +10,9 @@ use case, and may not work with `.mng` files created outside of MAME.
 
 ## Usage
 
-On Unix-like systems (tested only on macOS), ensure that [Node.js](https://nodejs.org/en) is installed, and use the command:
+On Unix-like systems (tested only on macOS), ensure that [Node.js](https://nodejs.org/) is installed, and use the command:
 
-    ./mngToPngs inputFile.mng outputDir
+    ./mngToPngs.mjs inputFile.mng outputDir
 
 ...to create a directory named `outputDir`, and fill it with a sequence of files like:
 
