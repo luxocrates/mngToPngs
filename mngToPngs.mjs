@@ -27,7 +27,7 @@ function* getChunks(fd) {
   // Skip past the .MNG magic header. Ideally we'd verify it.  
   {
     const fileHeaderSize = 8;
-    const fileHeader = new Buffer.alloc(fileHeaderSize)
+    const fileHeader = Buffer.alloc(fileHeaderSize)
     readSync(fd, fileHeader, 0, fileHeaderSize, 0); // TODO: test
     offset += fileHeaderSize;
   }
@@ -35,7 +35,7 @@ function* getChunks(fd) {
   while (true) {
     // Read the chunk header (tag and size)
     const chunkHeaderSize = 8;
-    const chunkHeader = new Buffer.alloc(chunkHeaderSize)
+    const chunkHeader = Buffer.alloc(chunkHeaderSize)
     readSync(fd, chunkHeader, 0, chunkHeaderSize, offset); // TODO: test
     offset += chunkHeaderSize;
 
@@ -48,7 +48,7 @@ function* getChunks(fd) {
       String.fromCharCode(chunkHeader.readUInt8(7));
     
     const payloadAndCrcSize = size + 4;
-    const payloadAndCrc = new Buffer.alloc(payloadAndCrcSize);
+    const payloadAndCrc = Buffer.alloc(payloadAndCrcSize);
     readSync(fd, payloadAndCrc, 0, payloadAndCrcSize, offset); // TODO: test
     offset += payloadAndCrcSize;
 
